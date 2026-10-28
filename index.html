@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Expense Tracker</title>
+  <!-- Link to external stylesheet (will be implemented in Task 2) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Main Application Wrapper -->
+  <main class="tracker-container">
+
+    <!-- Header Section -->
+    <header class="tracker-header">
+      <h1>Smart Expense Tracker</h1>
+      <p>Keep track of your daily expenses easily</p>
+    </header>
+
+    <!-- Error / Validation Feedback Area -->
+    <!-- This starts empty and will display messages if inputs are invalid -->
+    <div id="error-message" class="error-message" role="alert" aria-live="polite"></div>
+
+    <!-- Expense Entry Form -->
+    <section class="form-section">
+      <form id="expense-form" novalidate>
+        
+        <!-- Expense Name Input -->
+        <div class="form-group">
+          <label for="expense-name">Expense Name</label>
+          <input 
+            type="text" 
+            id="expense-name" 
+            name="expenseName" 
+            placeholder="e.g., Groceries" 
+            autocomplete="off"
+          >
+        </div>
+
+        <!-- Amount Input -->
+        <div class="form-group">
+          <label for="expense-amount">Amount ($)</label>
+          <input 
+            type="number" 
+            id="expense-amount" 
+            name="expenseAmount" 
+            placeholder="0.00" 
+            step="0.01" 
+            min="0.01"
+          >
+        </div>
+
+        <!-- Category Dropdown -->
+        <div class="form-group">
+          <label for="expense-category">Category</label>
+          <select id="expense-category" name="expenseCategory">
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Housing">Housing</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="add-expense-btn">Add Expense</button>
+      </form>
+    </section>
+
+    <!-- Total Spending Summary Section -->
+    <section class="summary-section">
+      <h2>Total Spent: <span id="total-amount">$0.00</span></h2>
+    </section>
+
+    <!-- Expenses List Display Section -->
+    <section class="list-section">
+      <h2>Expenses</h2>
+      <!-- The dynamic list items will be injected here by JavaScript -->
+      <ul id="expense-list" class="expense-list"></ul>
+    </section>
+
+  </main>
+
+  <!-- Link to external JavaScript file (will be implemented in Task 3+) -->
+  <script src="app.js" defer></script>
+</body>
+</html>
