@@ -52,10 +52,15 @@ function calculateTotal() {
   return totalCents / 100;
 }
 
+// Formats a numeric amount as a standard USD currency string ($XX.XX)
+function formatCurrency(amount) {
+  return `$${amount.toFixed(2)}`;
+}
+
 // Updates the total spending display in the UI formatted as USD ($0.00)
 function updateTotalDisplay() {
   const total = calculateTotal();
-  totalAmountDisplay.textContent = `$${total.toFixed(2)}`;
+  totalAmountDisplay.textContent = formatCurrency(total);
 }
 
 // --------------------------------------------------------------------------
@@ -104,7 +109,7 @@ function renderExpenses() {
 
     const amountSpan = document.createElement("span");
     amountSpan.className = "expense-amount-text";
-    amountSpan.textContent = `$${expense.amount.toFixed(2)}`;
+    amountSpan.textContent = formatCurrency(expense.amount);
 
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
