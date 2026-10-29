@@ -41,7 +41,7 @@ Project files (as described in our development workflow):
 - `style.css` — styling and layout.
 - `app.js` — input validation, expense storage, total calculation, list rendering, and deletion.
 
-The student reports that **development Tasks 1–7 passed manual verification**, including adding expenses, displaying them, calculating totals, deleting them, and rejecting invalid inputs. This is **student-reported testing**, not an independent code audit. **Task 8: end-to-end testing and review** remains to be carried out.
+The student reports that **development Tasks 1–7 passed manual verification**, including adding expenses, displaying them, calculating totals, deleting them, and rejecting invalid inputs. This is **student-reported testing**, not an independent code audit. **Task 8: end-to-end testing and review** is complete, as documented in `TEST_MATRIX.md` (19/19 student-performed manual tests passed) and `CODE_REVIEW_IMPROVEMENT.md` (completed code review, implemented F-01 refactoring, and 7/7 student-performed regression tests passed).
 
 The project has been pushed successfully to a GitHub repository.
 
