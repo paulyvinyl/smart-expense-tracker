@@ -24,9 +24,40 @@ const expenseCategorySelect = document.getElementById("expense-category");
 const errorMessageContainer = document.getElementById("error-message");
 const expenseList = document.getElementById("expense-list");
 const totalAmountDisplay = document.getElementById("total-amount");
+const themeToggle = document.getElementById("theme-toggle");
+const themeToggleLabel = document.getElementById("theme-toggle-label");
 
 // --------------------------------------------------------------------------
-// 3. Helper Functions: Error Display & Clearing
+// 3. Theme Preference
+// --------------------------------------------------------------------------
+const themePreferenceKey = "smart-expense-tracker-theme";
+
+function applyTheme(theme) {
+  const isDarkTheme = theme === "dark";
+  const activeTheme = isDarkTheme ? "dark" : "light";
+
+  document.documentElement.dataset.theme = activeTheme;
+  themeToggle.setAttribute("aria-checked", String(isDarkTheme));
+  themeToggleLabel.textContent = isDarkTheme ? "Dark" : "Light";
+}
+
+applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+
+themeToggle.addEventListener("click", function () {
+  const nextTheme =
+    document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+
+  applyTheme(nextTheme);
+
+  try {
+    window.localStorage.setItem(themePreferenceKey, nextTheme);
+  } catch (error) {
+    console.warn("Could not save the theme preference.", error);
+  }
+});
+
+// --------------------------------------------------------------------------
+// 4. Helper Functions: Error Display & Clearing
 // --------------------------------------------------------------------------
 // Displays a helpful error message in the error container
 function showError(message) {
@@ -39,7 +70,7 @@ function clearError() {
 }
 
 // --------------------------------------------------------------------------
-// 4. Helper Functions: Total Calculation & Display Update
+// 5. Helper Functions: Total Calculation & Display Update
 // --------------------------------------------------------------------------
 // Sums the amounts of all expense objects currently stored in the expenses array.
 // To avoid JavaScript floating-point inaccuracies (e.g. 0.01 + 0.02 = 0.030000000000000004),
@@ -64,7 +95,7 @@ function updateTotalDisplay() {
 }
 
 // --------------------------------------------------------------------------
-// 5. Helper Function: Dynamic List Rendering
+// 6. Helper Function: Dynamic List Rendering
 // --------------------------------------------------------------------------
 // Re-renders the entire <ul> list based on the current contents of the expenses array.
 function renderExpenses() {
@@ -130,7 +161,7 @@ function renderExpenses() {
 }
 
 // --------------------------------------------------------------------------
-// 6. Helper Function: Delete an Expense
+// 7. Helper Function: Delete an Expense
 // --------------------------------------------------------------------------
 // Removes an expense from the array by its unique ID and updates the screen
 function deleteExpense(id) {
@@ -150,7 +181,7 @@ function deleteExpense(id) {
 }
 
 // --------------------------------------------------------------------------
-// 7. Event Listeners
+// 8. Event Listeners
 // --------------------------------------------------------------------------
 
 // Listener A: Form Submission & Input Validation
@@ -216,7 +247,7 @@ expenseList.addEventListener("click", function (event) {
 });
 
 // --------------------------------------------------------------------------
-// 8. Initialization
+// 9. Initialization
 // --------------------------------------------------------------------------
 // Initial render to show the "No expenses added yet" placeholder on first load
 renderExpenses();

@@ -297,3 +297,279 @@ body {
     font-size: 1.2rem;
   }
 }
+
+/* --------------------------------------------------------------------------
+   9. Light / Dark Theme Toggle
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body,
+.tracker-container,
+.tracker-header h1,
+.tracker-header p,
+.error-message,
+.form-group label,
+.form-group input,
+.form-group select,
+.summary-section,
+.summary-section h2,
+#total-amount,
+.list-section h2,
+.expense-item,
+.expense-name-text,
+.expense-category-tag,
+.expense-amount-text,
+.delete-btn,
+.empty-list-message,
+.theme-toggle {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+:root[data-theme="dark"] body {
+  background-color: #151e2b;
+  color: #e4eaf2;
+}
+
+:root[data-theme="dark"] .tracker-container {
+  background-color: #202b3c;
+  border-color: #39485d;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3),
+              0 8px 10px -6px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .tracker-header h1,
+:root[data-theme="dark"] .list-section h2,
+:root[data-theme="dark"] .expense-amount-text {
+  color: #f1f5f9;
+}
+
+:root[data-theme="dark"] .tracker-header p {
+  color: #aab6c7;
+}
+
+:root[data-theme="dark"] .error-message {
+  background-color: #3a252b;
+  border-color: #75434b;
+  color: #ffb8bd;
+}
+
+:root[data-theme="dark"] .form-group label {
+  color: #d5deea;
+}
+
+:root[data-theme="dark"] .form-group input,
+:root[data-theme="dark"] .form-group select {
+  background-color: #172232;
+  border-color: #4a5a70;
+  color: #e4eaf2;
+}
+
+:root[data-theme="dark"] .form-group input::placeholder {
+  color: #96a4b7;
+}
+
+:root[data-theme="dark"] .form-group input:focus,
+:root[data-theme="dark"] .form-group select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.22);
+}
+
+:root[data-theme="dark"] #add-expense-btn:hover {
+  background-color: #3b82f6;
+}
+
+:root[data-theme="dark"] #add-expense-btn:focus-visible {
+  outline-color: #93c5fd;
+}
+
+:root[data-theme="dark"] .summary-section {
+  background: linear-gradient(135deg, #1b352e 0%, #234838 100%);
+  border-color: #3b6b53;
+}
+
+:root[data-theme="dark"] .summary-section h2 {
+  color: #b8e6cc;
+}
+
+:root[data-theme="dark"] #total-amount {
+  color: #86efac;
+}
+
+:root[data-theme="dark"] .list-section h2 {
+  border-bottom-color: #39485d;
+}
+
+:root[data-theme="dark"] .expense-item {
+  background-color: #263448;
+  border-color: #3d4e65;
+}
+
+:root[data-theme="dark"] .expense-item:hover {
+  background-color: #2d3d53;
+}
+
+:root[data-theme="dark"] .expense-name-text {
+  color: #e4eaf2;
+}
+
+:root[data-theme="dark"] .expense-category-tag {
+  background-color: #39495f;
+  color: #d4deeb;
+}
+
+:root[data-theme="dark"] .delete-btn {
+  background-color: #482a31;
+  border-color: #87434d;
+  color: #ffc0c5;
+}
+
+:root[data-theme="dark"] .delete-btn:hover {
+  background-color: #b42332;
+  border-color: #d35360;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .empty-list-message {
+  color: #9eacbf;
+}
+
+.theme-toggle {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 7px 10px 7px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  color: #334155;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.theme-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-icon-sun {
+  color: #d97706;
+}
+
+.theme-icon-moon {
+  display: none;
+  color: #fbbf24;
+}
+
+.theme-toggle[aria-checked="true"] .theme-icon-sun {
+  display: none;
+}
+
+.theme-toggle[aria-checked="true"] .theme-icon-moon {
+  display: block;
+}
+
+.theme-toggle-label {
+  min-width: 34px;
+}
+
+.theme-toggle-track {
+  display: flex;
+  align-items: center;
+  width: 36px;
+  height: 20px;
+  padding: 3px;
+  border-radius: 9999px;
+  background-color: #cbd5e1;
+  transition: background-color 180ms ease;
+}
+
+.theme-toggle-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.28);
+  transform: translateX(0);
+  transition: transform 180ms ease;
+}
+
+.theme-toggle[aria-checked="true"] .theme-toggle-track {
+  background-color: #2563eb;
+}
+
+.theme-toggle[aria-checked="true"] .theme-toggle-thumb {
+  transform: translateX(16px);
+}
+
+:root[data-theme="dark"] .theme-toggle {
+  background-color: #263448;
+  border-color: #4a5a70;
+  color: #e4eaf2;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.32);
+}
+
+:root[data-theme="dark"] .theme-toggle:focus-visible {
+  outline-color: #93c5fd;
+}
+
+@media (max-width: 480px) {
+  .theme-toggle {
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .tracker-container,
+  .tracker-header h1,
+  .tracker-header p,
+  .error-message,
+  .form-group label,
+  .form-group input,
+  .form-group select,
+  .summary-section,
+  .summary-section h2,
+  #total-amount,
+  .list-section h2,
+  .expense-item,
+  .expense-name-text,
+  .expense-category-tag,
+  .expense-amount-text,
+  .delete-btn,
+  .empty-list-message,
+  .theme-toggle,
+  .theme-toggle-track,
+  .theme-toggle-thumb {
+    transition-duration: 0.01ms;
+  }
+}

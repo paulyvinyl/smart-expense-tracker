@@ -115,7 +115,15 @@ Following successful verification of the core application, an AI-assisted code r
 
 ---
 
-## 7. Project Files & Documentation
+## 7. Post-Assignment Enhancement — Dark Mode
+
+After completing the CICD assignment, I used Replit on the separate `replit-learning` Git feature branch to experiment with AI-assisted development on this existing GitHub project. The optional enhancement adds a light/dark toggle near the bottom-right corner, saves the theme preference in browser `localStorage`, and preserves the existing expense functionality. It is not an original CICD assignment requirement.
+
+All manual verification conditions for the enhancement passed, as reported by the student. See the [Replit Experiment Log](REPLIT_LOG.md) for the original prompt, implementation details, and verification record.
+
+---
+
+## 8. Project Files & Documentation
 
 | File | Purpose |
 | :--- | :--- |
@@ -127,10 +135,11 @@ Following successful verification of the core application, an AI-assisted code r
 | [TEST_MATRIX.md](TEST_MATRIX.md) | Comprehensive 19-case manual test matrix with detailed steps, expected results, and actual outcomes. |
 | [CODE_REVIEW_IMPROVEMENT.md](CODE_REVIEW_IMPROVEMENT.md) | Full technical report on Finding F-01, the `formatCurrency()` refactoring, and regression results. |
 | [PROMPT_HISTORY.md](PROMPT_HISTORY.md) | Verbatim chronological archive of all 18 prompts, methodologies, and prompt-chaining flows. |
+| [REPLIT_LOG.md](REPLIT_LOG.md) | Record of the post-assignment Replit dark mode experiment, original prompt, implementation, and reported verification. |
 
 ---
 
-## 8. How to Run the Application
+## 9. How to Run the Application
 
 The application requires no web servers, runtime environments, compilers, or external dependencies.
 
