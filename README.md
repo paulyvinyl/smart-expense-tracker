@@ -136,6 +136,7 @@ All manual verification conditions for the enhancement passed, as reported by th
 | [CODE_REVIEW_IMPROVEMENT.md](CODE_REVIEW_IMPROVEMENT.md) | Full technical report on Finding F-01, the `formatCurrency()` refactoring, and regression results. |
 | [PROMPT_HISTORY.md](PROMPT_HISTORY.md) | Verbatim chronological archive of all 18 prompts, methodologies, and prompt-chaining flows. |
 | [REPLIT_LOG.md](REPLIT_LOG.md) | Record of the post-assignment Replit dark mode experiment, original prompt, implementation, and reported verification. |
+| [Bug Fix Log](bugfix.md) | Documentation of the dark-mode toggle placement defect, root cause, header repositioning, and PC/mobile verification. |
 
 ---
 
@@ -152,3 +153,9 @@ The application requires no web servers, runtime environments, compilers, or ext
    * **Option A:** Double-click `index.html` in your file explorer.
    * **Option B:** Right-click `index.html` and select **Open With** → Chrome, Edge, Firefox, or Safari.
    * **Option C:** Using a local development extension (such as VS Code Live Server) at `http://127.0.0.1:5500/smart-expense-tracker/index.html`.
+
+---
+
+## 10. Post-Enhancement Bug Fix — Dark Mode Toggle Placement
+
+During desktop PC testing of the optional post-assignment dark mode enhancement, the toggle switch was observed floating in the extreme bottom-right corner of the browser viewport rather than attached to the application interface. The root cause was `position: fixed` viewport anchoring outside the main container. The toggle was relocated inside `<header class="tracker-header">` within the application card using flexbox alignment. Placement and light/dark theme switching were independently verified on both PC and mobile. Full details, root cause analysis, and the verification table are documented in [bugfix.md](bugfix.md).
