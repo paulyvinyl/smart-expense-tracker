@@ -10,7 +10,7 @@ Developed with AI assistance via **Antigravity / Gemini** ("Aggi"), this project
 
 * **Purpose:** Enable users to log personal expenditures with immediate feedback, categorized grouping, and dynamic calculation of total spending.
 * **Technology Stack:** Pure client-side web technologies — **HTML5**, **plain CSS**, and **vanilla JavaScript** (ES6+).
-* **Architecture:** In-memory state array (`expenses = []`) with zero external frameworks, libraries, build tools, or server-side dependencies. Data resets cleanly upon page reload per assignment specifications.
+* **Architecture:** In-memory state array (`expenses = []`) with zero external frameworks, libraries, build tools, or server-side dependencies. In the original assignment baseline, data reset cleanly upon page reload per assignment specifications; same-browser persistence was subsequently introduced as an optional post-assignment enhancement.
 
 ---
 
@@ -137,6 +137,7 @@ All manual verification conditions for the enhancement passed, as reported by th
 | [PROMPT_HISTORY.md](PROMPT_HISTORY.md) | Verbatim chronological archive of all 18 prompts, methodologies, and prompt-chaining flows. |
 | [REPLIT_LOG.md](REPLIT_LOG.md) | Record of the post-assignment Replit dark mode experiment, original prompt, implementation, and reported verification. |
 | [Bug Fix Log](bugfix.md) | Documentation of the dark-mode toggle placement defect, root cause, header repositioning, and PC/mobile verification. |
+| [Expense Persistence Log](EXPENSE_PERSISTENCE_LOG.md) | Technical log and verification record for the same-browser localStorage expense persistence enhancement. |
 
 ---
 
@@ -159,3 +160,16 @@ The application requires no web servers, runtime environments, compilers, or ext
 ## 10. Post-Enhancement Bug Fix — Dark Mode Toggle Placement
 
 During desktop PC testing of the optional post-assignment dark mode enhancement, the toggle switch was observed floating in the extreme bottom-right corner of the browser viewport rather than attached to the application interface. The root cause was `position: fixed` viewport anchoring outside the main container. The toggle was relocated inside `<header class="tracker-header">` within the application card using flexbox alignment. Placement and light/dark theme switching were independently verified on both PC and mobile. Full details, root cause analysis, and the verification table are documented in [bugfix.md](bugfix.md).
+
+---
+
+## 11. Post-Assignment Enhancement — Same-Browser Expense Persistence
+
+Following the dark mode enhancement, same-browser expense persistence was implemented on the `feature/expense-persistence` branch as an additional optional post-assignment learning milestone.
+
+* **Persistence Scope:** Entered expenses survive page refreshes and reopening the application within the same browser profile at the same application address via browser `localStorage` (`smart-expense-tracker-expenses`).
+* **Local Storage Boundary:** Storage is strictly local to that specific browser profile and device. It does not synchronize across separate browsers, incognito/private windows, or different devices.
+* **Clearing Site Data:** Clearing the browser's site data or storage removes all saved expenses, returning the application cleanly to its default initial state ($0.00 total and empty list message).
+* **Fault-Tolerant Schema Validation:** Restored records undergo strict validation on startup (unique safe-integer IDs, nonblank trimmed names, finite positive numeric amounts, and valid categories). Malformed or corrupt storage is rejected with a user-facing warning while keeping the app operational in memory and leaving stored data intact.
+* **Documentation & Testing:** Complete implementation details, workflow notes, and multi-device verification results are documented in [EXPENSE_PERSISTENCE_LOG.md](EXPENSE_PERSISTENCE_LOG.md).
+
