@@ -1,22 +1,29 @@
 /* ==========================================================================
    Smart Expense Tracker - Application Logic (app.js)
-   Task 7: Deleting Individual Expenses
+   Feature: Same-Browser Expense Persistence
    ========================================================================== */
 
 // --------------------------------------------------------------------------
-// 1. Application State
+// 1. Storage Keys & Configuration
 // --------------------------------------------------------------------------
-// An in-memory array that will store all our expense objects.
-// Initially, the user has not added any expenses, so it starts empty.
-let expenses = [];
+// Distinct storage keys for expense records and theme preference
+const expenseStorageKey = "smart-expense-tracker-expenses";
+const themePreferenceKey = "smart-expense-tracker-theme";
 
-// A simple incrementing counter to give each expense a unique ID (1, 2, 3...)
-let nextExpenseId = 1;
+// Valid categories supported by the application
+const validCategories = [
+  "Food",
+  "Transport",
+  "Housing",
+  "Entertainment",
+  "Utilities",
+  "Other"
+];
 
 // --------------------------------------------------------------------------
 // 2. DOM Element Selectors
 // --------------------------------------------------------------------------
-// We "grab" references to the HTML elements using their unique IDs from index.html.
+// References to HTML elements using their unique IDs from index.html
 const expenseForm = document.getElementById("expense-form");
 const expenseNameInput = document.getElementById("expense-name");
 const expenseAmountInput = document.getElementById("expense-amount");
@@ -28,10 +35,126 @@ const themeToggle = document.getElementById("theme-toggle");
 const themeToggleLabel = document.getElementById("theme-toggle-label");
 
 // --------------------------------------------------------------------------
-// 3. Theme Preference
+// 3. Helper Functions: Error Display & Clearing
 // --------------------------------------------------------------------------
-const themePreferenceKey = "smart-expense-tracker-theme";
+// Displays a helpful error message in the error container
+function showError(message) {
+  errorMessageContainer.textContent = message;
+}
 
+// Clears any existing error message
+function clearError() {
+  errorMessageContainer.textContent = "";
+}
+
+// --------------------------------------------------------------------------
+// 4. Persistence Helpers & Application State
+// --------------------------------------------------------------------------
+// Validates an individual restored expense record against strict integrity rules:
+// - Unique positive safe-integer ID
+// - Nonblank trimmed name
+// - Finite positive numeric amount
+// - Category matching approved application categories
+function isValidExpenseRecord(record, seenIds) {
+  if (!record || typeof record !== "object") {
+    return false;
+  }
+  if (
+    typeof record.id !== "number" ||
+    !Number.isSafeInteger(record.id) ||
+    record.id <= 0 ||
+    seenIds.has(record.id)
+  ) {
+    return false;
+  }
+  if (typeof record.name !== "string" || record.name.trim() === "") {
+    return false;
+  }
+  if (
+    typeof record.amount !== "number" ||
+    !Number.isFinite(record.amount) ||
+    record.amount <= 0
+  ) {
+    return false;
+  }
+  if (
+    typeof record.category !== "string" ||
+    !validCategories.includes(record.category)
+  ) {
+    return false;
+  }
+  seenIds.add(record.id);
+  return true;
+}
+
+// Loads and validates saved expenses from localStorage on startup.
+// Leaves stored value untouched if corrupt or unavailable, and keeps the app usable in memory.
+function loadExpenses() {
+  let raw;
+  try {
+    raw = window.localStorage.getItem(expenseStorageKey);
+  } catch (error) {
+    console.warn("Could not access localStorage to load expenses:", error);
+    showError("Could not access local storage. Starting with an empty session.");
+    return [];
+  }
+
+  // Missing storage is a normal empty start
+  if (raw === null || raw === undefined) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      console.warn("Saved expense data is not an array. Starting with an empty list.");
+      showError("Saved expense data is invalid. Starting with an empty session.");
+      return [];
+    }
+
+    const seenIds = new Set();
+    for (let i = 0; i < parsed.length; i++) {
+      if (!isValidExpenseRecord(parsed[i], seenIds)) {
+        console.warn("Saved expense record failed validation:", parsed[i]);
+        showError("Saved expense records contain invalid data. Starting with an empty session.");
+        return [];
+      }
+    }
+
+    return parsed;
+  } catch (error) {
+    console.warn("Failed to parse saved expenses JSON:", error);
+    showError("Saved expense data could not be parsed. Starting with an empty session.");
+    return [];
+  }
+}
+
+// Saves current expenses array to localStorage after an add or delete.
+// Warns the user if storage fails so they know changes may be lost on reload.
+function saveExpenses() {
+  try {
+    window.localStorage.setItem(expenseStorageKey, JSON.stringify(expenses));
+  } catch (error) {
+    console.warn("Could not save expenses to localStorage:", error);
+    showError("Storage is full or unavailable. Your latest changes may be lost on reload.");
+  }
+}
+
+// Initialize application state from persistent storage
+let expenses = loadExpenses();
+
+// Calculate next unique ID starting after the highest restored ID
+let maxRestoredId = 0;
+for (let i = 0; i < expenses.length; i++) {
+  if (expenses[i].id > maxRestoredId) {
+    maxRestoredId = expenses[i].id;
+  }
+}
+let nextExpenseId = maxRestoredId + 1;
+
+// --------------------------------------------------------------------------
+// 5. Theme Preference
+// --------------------------------------------------------------------------
 function applyTheme(theme) {
   const isDarkTheme = theme === "dark";
   const activeTheme = isDarkTheme ? "dark" : "light";
@@ -57,24 +180,10 @@ themeToggle.addEventListener("click", function () {
 });
 
 // --------------------------------------------------------------------------
-// 4. Helper Functions: Error Display & Clearing
-// --------------------------------------------------------------------------
-// Displays a helpful error message in the error container
-function showError(message) {
-  errorMessageContainer.textContent = message;
-}
-
-// Clears any existing error message
-function clearError() {
-  errorMessageContainer.textContent = "";
-}
-
-// --------------------------------------------------------------------------
-// 5. Helper Functions: Total Calculation & Display Update
+// 6. Helper Functions: Total Calculation & Display Update
 // --------------------------------------------------------------------------
 // Sums the amounts of all expense objects currently stored in the expenses array.
-// To avoid JavaScript floating-point inaccuracies (e.g. 0.01 + 0.02 = 0.030000000000000004),
-// we convert each amount to integer cents, sum them, and convert back to dollars.
+// Uses integer cent arithmetic to avoid floating-point inaccuracies.
 function calculateTotal() {
   let totalCents = 0;
   for (let i = 0; i < expenses.length; i++) {
@@ -95,14 +204,14 @@ function updateTotalDisplay() {
 }
 
 // --------------------------------------------------------------------------
-// 6. Helper Function: Dynamic List Rendering
+// 7. Helper Function: Dynamic List Rendering
 // --------------------------------------------------------------------------
 // Re-renders the entire <ul> list based on the current contents of the expenses array.
 function renderExpenses() {
   // Clear the existing list contents to prevent duplicate entries
   expenseList.innerHTML = "";
 
-  // If there are no expenses in state, display a friendly empty-state message
+  // If there are no expenses in state, display friendly empty-state message
   if (expenses.length === 0) {
     const emptyItem = document.createElement("li");
     emptyItem.className = "empty-list-message";
@@ -161,14 +270,17 @@ function renderExpenses() {
 }
 
 // --------------------------------------------------------------------------
-// 7. Helper Function: Delete an Expense
+// 8. Helper Function: Delete an Expense
 // --------------------------------------------------------------------------
-// Removes an expense from the array by its unique ID and updates the screen
+// Removes an expense from the array by its unique ID, saves state, and updates the screen
 function deleteExpense(id) {
   // Filter out the expense with the matching ID, keeping all others
   expenses = expenses.filter(function (expense) {
     return expense.id !== id;
   });
+
+  // Save the updated array to storage (including when it becomes empty)
+  saveExpenses();
 
   // Re-render the visual list to remove the deleted row
   renderExpenses();
@@ -181,7 +293,7 @@ function deleteExpense(id) {
 }
 
 // --------------------------------------------------------------------------
-// 8. Event Listeners
+// 9. Event Listeners
 // --------------------------------------------------------------------------
 
 // Listener A: Form Submission & Input Validation
@@ -221,6 +333,9 @@ expenseForm.addEventListener("submit", function (event) {
   // Add the new expense object to our state array
   expenses.push(newExpense);
 
+  // Save the updated array to storage
+  saveExpenses();
+
   // Recalculate and update the total display in the UI
   updateTotalDisplay();
 
@@ -247,10 +362,14 @@ expenseList.addEventListener("click", function (event) {
 });
 
 // --------------------------------------------------------------------------
-// 9. Initialization
+// 10. Initialization
 // --------------------------------------------------------------------------
-// Initial render to show the "No expenses added yet" placeholder on first load
+// Initial render to show restored items or the empty placeholder on first load
 renderExpenses();
+
+// Initial update to display restored total or default $0.00
+updateTotalDisplay();
 
 // Confirmation log that the script loaded and ran without errors
 console.log("App initialized");
+
