@@ -184,6 +184,37 @@ body {
   border-bottom: 1.5px solid #e2e8f0;
 }
 
+.sort-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.sort-control label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.sort-control select {
+  font-size: 0.875rem;
+  padding: 6px 10px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sort-control select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
 .expense-list {
   list-style: none; /* Removes standard bullet points */
   display: flex;
@@ -296,6 +327,16 @@ body {
   #total-amount {
     font-size: 1.2rem;
   }
+
+  .sort-control {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .sort-control select {
+    flex: 1;
+    max-width: 200px;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -321,6 +362,8 @@ body,
 .summary-section h2,
 #total-amount,
 .list-section h2,
+.sort-control label,
+.sort-control select,
 .expense-item,
 .expense-name-text,
 .expense-category-tag,
@@ -363,12 +406,14 @@ body,
   color: #ffb8bd;
 }
 
-:root[data-theme="dark"] .form-group label {
+:root[data-theme="dark"] .form-group label,
+:root[data-theme="dark"] .sort-control label {
   color: #d5deea;
 }
 
 :root[data-theme="dark"] .form-group input,
-:root[data-theme="dark"] .form-group select {
+:root[data-theme="dark"] .form-group select,
+:root[data-theme="dark"] .sort-control select {
   background-color: #172232;
   border-color: #4a5a70;
   color: #e4eaf2;
@@ -379,7 +424,8 @@ body,
 }
 
 :root[data-theme="dark"] .form-group input:focus,
-:root[data-theme="dark"] .form-group select:focus {
+:root[data-theme="dark"] .form-group select:focus,
+:root[data-theme="dark"] .sort-control select:focus {
   border-color: #60a5fa;
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.22);
 }

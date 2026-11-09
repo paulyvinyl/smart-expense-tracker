@@ -110,6 +110,14 @@
     <!-- Expenses List Display Section -->
     <section class="list-section">
       <h2>Expenses</h2>
+      <div class="sort-control">
+        <label for="sort-select">Sort by</label>
+        <select id="sort-select" name="sortBy">
+          <option value="original" selected>Original order</option>
+          <option value="category-asc">Category (A–Z)</option>
+          <option value="category-desc">Category (Z–A)</option>
+        </select>
+      </div>
       <!-- The dynamic list items will be injected here by JavaScript -->
       <ul id="expense-list" class="expense-list"></ul>
     </section>

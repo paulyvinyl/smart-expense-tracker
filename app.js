@@ -33,6 +33,7 @@ const expenseList = document.getElementById("expense-list");
 const totalAmountDisplay = document.getElementById("total-amount");
 const themeToggle = document.getElementById("theme-toggle");
 const themeToggleLabel = document.getElementById("theme-toggle-label");
+const sortSelect = document.getElementById("sort-select");
 
 // --------------------------------------------------------------------------
 // 3. Helper Functions: Error Display & Clearing
@@ -206,6 +207,38 @@ function updateTotalDisplay() {
 // --------------------------------------------------------------------------
 // 7. Helper Function: Dynamic List Rendering
 // --------------------------------------------------------------------------
+// Returns a sorted shallow copy of the expenses array based on the active sort dropdown.
+// Does NOT sort or mutate the underlying expenses array in place.
+// Preserves original entry order within each category in both A-Z and Z-A directions.
+function getSortedExpenses() {
+  const sortMode = sortSelect ? sortSelect.value : "original";
+
+  if (sortMode === "original" || expenses.length <= 1) {
+    return [...expenses];
+  }
+
+  return expenses
+    .map(function (item, index) {
+      return { item: item, index: index };
+    })
+    .sort(function (a, b) {
+      const catA = a.item.category;
+      const catB = b.item.category;
+
+      if (catA !== catB) {
+        return sortMode === "category-asc"
+          ? catA.localeCompare(catB)
+          : catB.localeCompare(catA);
+      }
+
+      // Preserve original entry order within the same category
+      return a.index - b.index;
+    })
+    .map(function (wrapper) {
+      return wrapper.item;
+    });
+}
+
 // Re-renders the entire <ul> list based on the current contents of the expenses array.
 function renderExpenses() {
   // Clear the existing list contents to prevent duplicate entries
@@ -220,9 +253,12 @@ function renderExpenses() {
     return;
   }
 
-  // Iterate over each expense object in the array and construct its HTML elements
-  for (let i = 0; i < expenses.length; i++) {
-    const expense = expenses[i];
+  // Get a separate display copy without mutating the underlying expenses array
+  const displayExpenses = getSortedExpenses();
+
+  // Iterate over each expense object in the sorted copy and construct its HTML elements
+  for (let i = 0; i < displayExpenses.length; i++) {
+    const expense = displayExpenses[i];
 
     // Create the outer <li> row
     const li = document.createElement("li");
@@ -360,6 +396,14 @@ expenseList.addEventListener("click", function (event) {
     deleteExpense(idToDelete);
   }
 });
+
+// Listener C: Sort Dropdown Selection Change
+// Re-renders the display list in the selected sort order without touching underlying state or localStorage
+if (sortSelect) {
+  sortSelect.addEventListener("change", function () {
+    renderExpenses();
+  });
+}
 
 // --------------------------------------------------------------------------
 // 10. Initialization

@@ -138,6 +138,7 @@ All manual verification conditions for the enhancement passed, as reported by th
 | [REPLIT_LOG.md](REPLIT_LOG.md) | Record of the post-assignment Replit dark mode experiment, original prompt, implementation, and reported verification. |
 | [Bug Fix Log](bugfix.md) | Documentation of the dark-mode toggle placement defect, root cause, header repositioning, and PC/mobile verification. |
 | [Expense Persistence Log](EXPENSE_PERSISTENCE_LOG.md) | Technical log and verification record for the same-browser localStorage expense persistence enhancement. |
+| [Category Sorting Log](CATEGORY_SORTING_LOG.md) | Technical log and multi-source verification record for in-memory category sorting. |
 
 ---
 
@@ -173,3 +174,18 @@ Following the dark mode enhancement, same-browser expense persistence was implem
 * **Fault-Tolerant Schema Validation:** Restored records undergo strict validation on startup (unique safe-integer IDs, nonblank trimmed names, finite positive numeric amounts, and valid categories). Malformed or corrupt storage is rejected with a user-facing warning while keeping the app operational in memory and leaving stored data intact.
 * **Documentation & Testing:** Complete implementation details, workflow notes, and multi-device verification results are documented in [EXPENSE_PERSISTENCE_LOG.md](EXPENSE_PERSISTENCE_LOG.md).
 
+---
+
+## 12. Post-Assignment Enhancement — Category Sorting
+
+Following expense persistence, category sorting was added on the `feature/category-sorting` branch as an independent learning enhancement based on simulated user feedback (including 15 simulated requests for category sorting). A native dropdown labeled "Sort by" is positioned directly inside the expense list section, below the Expenses heading and above the list.
+
+* **Sorting Options:**
+  1. **Original order (default):** Displays expenses in their underlying chronological insertion order.
+  2. **Category (A–Z):** Groups expenses alphabetically by category (`Entertainment`, `Food`, `Housing`, `Other`, `Transport`, `Utilities`).
+  3. **Category (Z–A):** Reverses category order (`Utilities`, `Transport`, `Other`, `Housing`, `Food`, `Entertainment`).
+* **Preserved Entry Order Within Categories:** In both A–Z and Z–A modes, expenses sharing the same category maintain their original entry sequence.
+* **Non-Mutating Display Sort:** Sorting operates strictly on a separate display copy and never reorders or mutates the underlying `expenses` array in place. Changing the sort selection does not rewrite or save storage data.
+* **Active Mode Retention & Reset Behavior:** The selected sort mode remains active across expense additions and deletions. When refreshed or reopened, the dropdown resets to "Original order".
+* **Independent Persistence:** Stored expense data and theme settings remain fully persistent independently of the active display sort selection.
+* **Full Details:** See [CATEGORY_SORTING_LOG.md](CATEGORY_SORTING_LOG.md) for the implementation details, prompt record, and verification evidence.
